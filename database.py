@@ -1,5 +1,7 @@
-class Database(object):
+import MySQLdb
 
+
+class Database(object):
     @staticmethod
     def represents_int(s):
         try:
@@ -7,10 +9,12 @@ class Database(object):
             return True
         except ValueError:
             return False
+
+    def get_cursor(self):
+        return self.db.cursor()
         
-    @staticmethod
-    def insert_data(db, numcol, entries, new_var, value):
-        cursor2 = db.cursor()
+    def insert_data(self, numcol, entries, new_var, value):
+        cursor2 = self.db.cursor()
         database1 = "movedb"
 
         # print(entries[j].get())
@@ -36,9 +40,8 @@ class Database(object):
         # for x in entries:
         #     print (x.get())
 
-    @staticmethod
-    def delete_data(db, value, entries, new_var):
-        cursor3 = db.cursor()
+    def delete_data(self, value, entries, new_var):
+        cursor3 = self.db.cursor()
         database1 = "movedb"
         table_name = "`" + value + "`"
         r = "`" + new_var[0] + "`"
@@ -48,13 +51,12 @@ class Database(object):
             s = "'" + entries[0].get() + "'"
 
         cursor3.execute("DELETE FROM {0} WHERE {1} ={2} ".format(table_name, r, s))
-        
-    @staticmethod
-    def update_data(db, new_var, entries, value, numcol):
+
+    def update_data(self, new_var, entries, value, numcol):
         new_var1 = []
         print("test")
         entries1 = []
-        cursor4 = db.cursor()
+        cursor4 = self.db.cursor()
         database1 = "movedb"
         table_name = "`" + value + "`"
 
@@ -76,5 +78,9 @@ class Database(object):
             cursor4.execute(
                 """UPDATE {0} SET {1}={2} WHERE {3} ={4} """.format(table_name, new_var1[l], entries1[l], r, s))
 
-    def __init__(self):
+    def close_database(self):
+        self.db.close()
+
+    def __init__(self, db=MySQLdb.connect("localhost", port=3306, user="root", db="movedb")):
+        self.db = db
         pass
