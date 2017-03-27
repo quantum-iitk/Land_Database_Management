@@ -14,7 +14,6 @@ array = []
 new_var = []
 numcol = 0
 database = Database()
-db = MySQLdb.connect("localhost", port=3306, user="root", db="movedb")
 
 # def represents_int(s):
 #     try:
