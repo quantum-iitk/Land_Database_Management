@@ -1,4 +1,5 @@
-from tkinter.tix import *
+from tkinter import *
+from database import Database
 
 import MySQLdb
 
@@ -12,14 +13,15 @@ variables = []
 array = []
 new_var = []
 numcol = 0
+database = Database()
+db = MySQLdb.connect("localhost", port=3306, user="root", db="movedb")
 
-
-def represents_int(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False
+# def represents_int(s):
+#     try:
+#         int(s)
+#         return True
+#     except ValueError:
+#         return False
 
 
 def view_table():
@@ -35,7 +37,7 @@ def view_table():
     cursor1.execute(
         "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` = %s AND `TABLE_NAME` = %s",
         (database1, value))
-    db.commit()
+    # db.commit()
     global numcol, i
     numcol = int(cursor1.rowcount)
     for i in range(0, numcol):
@@ -61,77 +63,76 @@ def view_table():
     #     print (m)
 
 
-    def insert_data():
-        cursor2 = db.cursor()
-        database1 = "movedb"
-
-        # print(entries[j].get())
-        p = "("
-        q = "("
-        for l in range(0, numcol - 1):
-            if represents_int(entries[l].get()):
-                p = p + entries[l].get() + ","
-            else:
-                p = p + "'" + entries[l].get() + "'" + ","
-            q = q + "`" + new_var[l] + "`" + ","
-        if represents_int(entries[numcol - 1].get()):
-            p = p + entries[numcol - 1].get() + ")"
-        else:
-            p = p + "'" + entries[numcol - 1].get() + "'" + ")"
-        table_name = "`" + value + "`"
-
-        q = q + "`" + new_var[numcol - 1] + "`" + ")"
-        # print (p)
-        # print (q)
-        cursor2.execute("INSERT INTO {0} {1} VALUES {2} ".format(table_name, q, p))
-        # db.commit()
-        # for x in entries:
-        #     print (x.get())
-
-    def delete_data():
-        cursor3 = db.cursor()
-        database1 = "movedb"
-        table_name = "`" + value + "`"
-        r = "`" + new_var[0] + "`"
-        if represents_int(entries[0].get()):
-            s = entries[0].get()
-        else:
-            s = "'" + entries[0].get() + "'"
-
-        cursor3.execute("DELETE FROM {0} WHERE {1} ={2} ".format(table_name, r, s))
-
-    def update_data():
-        new_var1 = []
-        entries1 = []
-        cursor4 = db.cursor()
-        database1 = "movedb"
-        table_name = "`" + value + "`"
-
-        r = "`" + new_var[0] + "`"
-
-        for m in range(0, numcol):
-            if represents_int(entries[m].get()):
-                entries1.insert(m, entries[m].get())
-            else:
-                entries1.insert(m, "'" + entries[m].get() + "'")
-        for number in range(0, numcol):
-            new_var1.insert(number, "`" + new_var[number] + "`")
-        if represents_int(entries[0].get()):
-            s = entries[0].get()
-        else:
-            s = "'" + entries[0].get() + "'"
-
-        for l in range(0, numcol):
-            cursor4.execute(
-                """UPDATE {0} SET {1}={2} WHERE {3} ={4} """.format(table_name, new_var1[l], entries1[l], r, s))
-
-    button_insert = Button(col_window, text="INSERT", command=insert_data)
+    # def insert_data():
+    #     cursor2 = db.cursor()
+    #     database1 = "movedb"
+    #
+    #     # print(entries[j].get())
+    #     p = "("
+    #     q = "("
+    #     for l in range(0, numcol - 1):
+    #         if Database.represents_int(entries[l].get()):
+    #             p = p + entries[l].get() + ","
+    #         else:
+    #             p = p + "'" + entries[l].get() + "'" + ","
+    #         q = q + "`" + new_var[l] + "`" + ","
+    #     if Database.represents_int(entries[numcol - 1].get()):
+    #         p = p + entries[numcol - 1].get() + ")"
+    #     else:
+    #         p = p + "'" + entries[numcol - 1].get() + "'" + ")"
+    #     table_name = "`" + value + "`"
+    #
+    #     q = q + "`" + new_var[numcol - 1] + "`" + ")"
+    #     # print (p)
+    #     # print (q)
+    #     cursor2.execute("INSERT INTO {0} {1} VALUES {2} ".format(table_name, q, p))
+    #     # db.commit()
+    #     # for x in entries:
+    #     #     print (x.get())
+    #
+    # def delete_data():
+    #     cursor3 = db.cursor()
+    #     database1 = "movedb"
+    #     table_name = "`" + value + "`"
+    #     r = "`" + new_var[0] + "`"
+    #     if Database.represents_int(entries[0].get()):
+    #         s = entries[0].get()
+    #     else:
+    #         s = "'" + entries[0].get() + "'"
+    #
+    #     cursor3.execute("DELETE FROM {0} WHERE {1} ={2} ".format(table_name, r, s))
+    #
+    # def update_data():
+    #     new_var1 = []
+    #     entries1 = []
+    #     cursor4 = db.cursor()
+    #     database1 = "movedb"
+    #     table_name = "`" + value + "`"
+    #
+    #     r = "`" + new_var[0] + "`"
+    #
+    #     for m in range(0, numcol):
+    #         if Database.represents_int(entries[m].get()):
+    #             entries1.insert(m, entries[m].get())
+    #         else:
+    #             entries1.insert(m, "'" + entries[m].get() + "'")
+    #     for number in range(0, numcol):
+    #         new_var1.insert(number, "`" + new_var[number] + "`")
+    #     if Database.represents_int(entries[0].get()):
+    #         s = entries[0].get()
+    #     else:
+    #         s = "'" + entries[0].get() + "'"
+    #
+    #     for l in range(0, numcol):
+    #         cursor4.execute(
+    #             """UPDATE {0} SET {1}={2} WHERE {3} ={4} """.format(table_name, new_var1[l], entries1[l], r, s))
+    button_insert = Button(col_window, text="INSERT", command=Database.insert_data(db, numcol, entries, new_var, value))
     button_insert.grid(row=i + 1, column=1, sticky=SW)
 
-    button_update = Button(col_window, text="UPDATE", command=update_data)
+    button_update = Button(col_window, text="UPDATE", command=Database.update_data(db, new_var,entries,value,numcol))
     button_update.grid(row=i + 1, column=2, sticky=SW)
 
-    button_delete = Button(col_window, text="Delete", command=delete_data)
+    button_delete = Button(col_window, text="Delete", command=Database.delete_data(db, value, entries, new_var))
     button_delete.grid(row=i + 1, column=3, sticky=SW)
 
 
