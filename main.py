@@ -126,13 +126,15 @@ def view_table():
     #     for l in range(0, numcol):
     #         cursor4.execute(
     #             """UPDATE {0} SET {1}={2} WHERE {3} ={4} """.format(table_name, new_var1[l], entries1[l], r, s))
-    button_insert = Button(col_window, text="INSERT", command=Database.insert_data(db, numcol, entries, new_var, value))
+    button_insert = Button(col_window, text="INSERT",
+                           command=lambda: Database.insert_data(db, numcol, entries, new_var, value))
     button_insert.grid(row=i + 1, column=1, sticky=SW)
 
-    button_update = Button(col_window, text="UPDATE", command=Database.update_data(db, new_var,entries,value,numcol))
+    button_update = Button(col_window, text="UPDATE",
+                           command=lambda: Database.update_data(db, new_var, entries, value, numcol))
     button_update.grid(row=i + 1, column=2, sticky=SW)
 
-    button_delete = Button(col_window, text="Delete", command=Database.delete_data(db, value, entries, new_var))
+    button_delete = Button(col_window, text="Delete", command=lambda: Database.delete_data(db, value, entries, new_var))
     button_delete.grid(row=i + 1, column=3, sticky=SW)
 
 
