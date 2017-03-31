@@ -1,4 +1,6 @@
 from tkinter.tix import *
+from PIL import ImageTk, Image
+#install Pillow using pip
 
 import MySQLdb
 
@@ -137,6 +139,7 @@ def view_table():
 
 label = Label(root, text="The tables in the database are as follow:")
 label.grid(row=0, column=0, sticky=N)
+label.configure(background='green')
 listbox1 = Listbox(root)
 listbox1.grid(sticky=NSEW)
 
@@ -153,6 +156,18 @@ file_menu = Menu(menu_bar, tearoff=0)
 # all file menu-items will be added here next
 menu_bar.add_cascade(label='About', menu=file_menu)
 root.config(menu=menu_bar)
+
+path = 'E:\\Land Database\\WindowsFormsApplication1\\Resources\\Photo.jpg'
+
+#Creates a Tkinter-compatible photo image, which can be used everywhere Tkinter expects an image object.
+img = ImageTk.PhotoImage(Image.open(path))
+
+#The Label widget is a standard Tkinter widget used to display a text or image on the screen.
+panel = Label(root, image = img)
+
+#The Pack geometry manager packs widgets in rows or columns.
+panel.grid(row=1,column=4,sticky=E)
+root.configure(background='green')
 
 cursor = db.cursor()
 cursor.execute('SELECT table_name FROM information_schema.tables where table_schema=\'movedb\'')
