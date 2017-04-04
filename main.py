@@ -1,14 +1,18 @@
 from tkinter.tix import *
 from PIL import ImageTk, Image
-#install Pillow using pip
-
 import MySQLdb
+from base_test import FirstWindow
 
+
+# install Pillow using pip
+
+
+db_name = FirstWindow().db_name
 root = Tk()
 root.title("Land Database Management System")
 myContainer = Frame(root)
 myContainer.grid()
-db = MySQLdb.connect("localhost", port=3306, user="root", db="movedb")
+db = MySQLdb.connect("localhost", port=3306, user="root", db=db_name)
 entries = []
 variables = []
 array = []
@@ -32,12 +36,10 @@ def view_table():
     col_window.focus_set()
 
     cursor1 = db.cursor()
-
-    database1 = "movedb"
+    database1 = db_name
     cursor1.execute(
         "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` = %s AND `TABLE_NAME` = %s",
         (database1, value))
-    db.commit()
     global numcol, i
     numcol = int(cursor1.rowcount)
     for i in range(0, numcol):
@@ -62,10 +64,8 @@ def view_table():
     # for m in new_var:
     #     print (m)
 
-
     def insert_data():
         cursor2 = db.cursor()
-        database1 = "movedb"
 
         # print(entries[j].get())
         p = "("
@@ -86,13 +86,12 @@ def view_table():
         # print (p)
         # print (q)
         cursor2.execute("INSERT INTO {0} {1} VALUES {2} ".format(table_name, q, p))
-        # db.commit()
+        db.commit()
         # for x in entries:
         #     print (x.get())
 
     def delete_data():
         cursor3 = db.cursor()
-        database1 = "movedb"
         table_name = "`" + value + "`"
         r = "`" + new_var[0] + "`"
         if represents_int(entries[0].get()):
@@ -106,7 +105,6 @@ def view_table():
         new_var1 = []
         entries1 = []
         cursor4 = db.cursor()
-        database1 = "movedb"
         table_name = "`" + value + "`"
 
         r = "`" + new_var[0] + "`"
@@ -143,6 +141,7 @@ label.configure(background='green')
 listbox1 = Listbox(root)
 listbox1.grid(sticky=NSEW)
 
+
 click = Button(root, text="Click to view tables", command=view_table)
 click.grid(row=2, column=0, sticky=E, padx=2, pady=2)
 
@@ -157,25 +156,23 @@ file_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label='About', menu=file_menu)
 root.config(menu=menu_bar)
 
-path = 'E:\\Land Database\\WindowsFormsApplication1\\Resources\\Photo.jpg'
+path = 'E:\\LandDatabase\\WindowsFormsApplication1\\Resources\\Photo.jpg'
 
-#Creates a Tkinter-compatible photo image, which can be used everywhere Tkinter expects an image object.
+# Creates a Tkinter-compatible photo image, which can be used everywhere Tkinter expects an image object.
 img = ImageTk.PhotoImage(Image.open(path))
 
-#The Label widget is a standard Tkinter widget used to display a text or image on the screen.
+# The Label widget is a standard Tkinter widget used to display a text or image on the screen.
 panel = Label(root, image = img)
 
-#The Pack geometry manager packs widgets in rows or columns.
+# The Pack geometry manager packs widgets in rows or columns.
 panel.grid(row=1,column=4,sticky=E)
 root.configure(background='green')
 
 cursor = db.cursor()
-cursor.execute('SELECT table_name FROM information_schema.tables where table_schema=\'movedb\'')
-db.commit()
+cursor.execute('SELECT table_name FROM information_schema.tables where table_schema=\'' + db_name + '\'')
 num_tables = int(cursor.rowcount)
 for i in range(0, num_tables):
     row = cursor.fetchone()
     listbox1.insert(END, row[0])
-
 root.mainloop()
 db.close()
