@@ -32,7 +32,7 @@ def represents_int(s):
         return True
     except ValueError:
         return False
-
+# Viewtable
 
 def view_table():
     value = str((listbox1.get(listbox1.curselection())))
