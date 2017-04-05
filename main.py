@@ -89,11 +89,6 @@ def view_table():
         vary = (", ".join(array[k]))
         new_var.insert(k, vary)
 
-    #
-    # array1=["hey Baby"]
-    # print(array1[0])
-    # for m in new_var:
-    #     print (m)
 
     def insert_data():
         cursor2 = db.cursor()
@@ -156,6 +151,34 @@ def view_table():
             cursor4.execute(
                 """UPDATE {0} SET {1}={2} WHERE {3} ={4} """.format(table_name, new_var1[l], entries1[l], r, s))
 
+    def search_data():
+        data_container=[]
+        new_var1 = []
+        cursor5 = db.cursor()
+        table_name = "`" + value + "`"
+
+        r = "`" + new_var[0] + "`"
+        for number in range(0, numcol):
+            new_var1.insert(number, "`" + new_var[number] + "`")
+
+        if represents_int(entries[0].get()):
+            s = entries[0].get()
+        else:
+            s = "'" + entries[0].get() + "'"
+
+        for l in range (0, numcol):
+            cursor5.execute("""SELECT {0} FROM {1} WHERE {2} ={3} """.format(new_var1[l],table_name, r, s))
+            data_container.insert(l, cursor5.fetchone()[0])
+
+        count = 0
+        for data in data_container:
+            print(data)
+            # entry.insert(count, data)
+            e = entries[count]
+            e.delete(0, END)
+            e.insert(count, data)
+            count += 1
+
     if(numcol>10):
         button_insert = Button(col_window, text="INSERT", command=insert_data)
         button_insert.grid(row=15, column=3,)
@@ -165,6 +188,10 @@ def view_table():
 
         button_delete = Button(col_window, text="Delete", command=delete_data)
         button_delete.grid(row=15, column=5)
+
+
+        button_search = Button(col_window, text="Search", command=search_data)
+        button_search.grid(row=15, column=6)
 
     else:
         button_insert = Button(col_window, text="INSERT", command=insert_data)
@@ -176,6 +203,9 @@ def view_table():
         button_delete = Button(col_window, text="Delete", command=delete_data)
         button_delete.grid(row=i + 1, column=3, sticky=SW)
 
+
+        button_search = Button(col_window, text="Search", command=search_data)
+        button_search.grid(row=i+1, column=4)
 
 label = Label(root, text="The tables in the database are as follow:")
 label.grid(row=0, column=0, sticky=N)
