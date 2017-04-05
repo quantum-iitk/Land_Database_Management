@@ -269,15 +269,5 @@ def print_data(value):
     document.save('demo.docx')
     os.startfile('demo.docx','print')
 
-#
-# def print_details(*args):
-#     try:
-#         form_name = table_name[lsb_query.curselection()[0]]
-#         print_data(form_name,dbname)
-#     except ValueError:
-#         pass
-
-
-
 root.mainloop()
 db.close()

@@ -11,12 +11,12 @@ class FirstWindow:
                     self.village.get().strip() == "") | (self.paragana.get().strip() == ""):
             print("Enter correct data")
             return
-        self.db_name = "land_rcrds_" + self.District.get().strip() + "_" + self.tehsil.get().strip() + "_" + self.village.get().strip() + "_" + self.paragana.get().strip()
+        self.db_name = "land_records_" + self.District.get().strip() + "_" + self.tehsil.get().strip() + "_" + self.village.get().strip() + "_" + self.paragana.get().strip()
         try:
             print(self.db_name)
             connection = psql.connect(host='localhost', user='root', password='', db=self.db_name, charset='utf8mb4',
                                       cursorclass=psql.cursors.DictCursor)
-            print("already exist and connected")
+            print("Databse already exists and connected")
             self.root.destroy()
             # main1(self.db_name)
         except:
@@ -25,7 +25,7 @@ class FirstWindow:
                                       )
             cursor = connection.cursor()
             cursor.execute("CREATE DATABASE `%s`" % self.db_name)
-            print("new database created")
+            print("New database created")
 
             connection = psql.connect(host='localhost', user='root', password='', db=self.db_name, charset='utf8mb4',
                                       cursorclass=psql.cursors.DictCursor)
@@ -37,7 +37,7 @@ class FirstWindow:
 
     def __init__(self):
         self.root = Tk()
-        self.root.title("Connect to database")
+        self.root.title("Database Connection")
 
         gui_style = ttk.Style()
         gui_style.configure('My.TButton', foreground='#334353')
