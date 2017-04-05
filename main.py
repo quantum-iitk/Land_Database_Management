@@ -2,6 +2,12 @@ from tkinter.tix import *
 from PIL import ImageTk, Image
 import MySQLdb
 from base_test import FirstWindow
+from docx import Document
+from docx.shared import Inches
+from docx.enum.section import WD_ORIENTATION
+import pymysql as psql
+import os
+
 
 
 # install Pillow using pip
@@ -138,8 +144,13 @@ def view_table():
 label = Label(root, text="The tables in the database are as follow:")
 label.grid(row=0, column=0, sticky=N)
 label.configure(background='green')
-listbox1 = Listbox(root)
-listbox1.grid(sticky=NSEW)
+
+
+label_print = Label(root, text="Select the listed tables to print:",background='green')
+label_print.grid(row=0, column=3, sticky=E,)
+
+listbox1 = Listbox(root,background='yellow')
+listbox1.grid(sticky=NSEW,)
 
 
 click = Button(root, text="Click to view tables", command=view_table)
@@ -165,14 +176,108 @@ img = ImageTk.PhotoImage(Image.open(path))
 panel = Label(root, image = img)
 
 # The Pack geometry manager packs widgets in rows or columns.
-panel.grid(row=1,column=4,sticky=E)
+panel.grid(row=1,column=2,sticky=E)
 root.configure(background='green')
 
 cursor = db.cursor()
 cursor.execute('SELECT table_name FROM information_schema.tables where table_schema=\'' + db_name + '\'')
 num_tables = int(cursor.rowcount)
+lsb_query=Listbox(root,background='yellow')
+lsb_query.grid(column=3,row=1,sticky=NSEW,)
+
+db.commit()
+
+
 for i in range(0, num_tables):
     row = cursor.fetchone()
     listbox1.insert(END, row[0])
+    lsb_query.insert(END,row[0])
+
+def print_details(*args):
+    try:
+        value = str((lsb_query.get(lsb_query.curselection())))
+        print_data(value)
+    except ValueError:
+        pass
+
+printer = Button(root, text="Print", command=print_details)
+printer.grid(row=2, column=3, sticky=E, padx=2, pady=2)
+
+
+def print_data(value):
+    connection = psql.connect(host='localhost', user='root', password='', db=db_name, charset='utf8mb4',
+                              autocommit=True, cursorclass=psql.cursors.DictCursor)
+
+    cursor = connection.cursor()
+    details = db_name.split("_")
+    print(details)
+    district = details[2]
+    tehsil = details[3]
+    village = details[4]
+    paragana = details[5]
+
+    cursor.execute('SELECT * FROM `%s`'%(value))
+    data = cursor.fetchall()
+
+    document = Document()
+
+    section = document.sections[0]
+    section.orientation= WD_ORIENTATION.LANDSCAPE
+    print(section.orientation)
+
+    section.page_width = Inches(18.03)
+    section.page_height = Inches(12.76)
+    print(section.page_height,section.page_width)
+    # /section.orientation = WD_ORIENT.LANDSCAPE
+    h = document.add_heading(value.capitalize(), 0)
+    h.alignment = 1
+    h1=document.add_heading("District: "+district+"   Tehsil:  "+tehsil+"  Village:  "+village+"   Paragana:  "+paragana,0)
+    h1.alignment= 1
+    p = document.add_paragraph('A plain paragraph having some ')
+    p.add_run('bold').bold = True
+    p.add_run(' and some ')
+    p.add_run('italic.').italic = True
+    p.alignment =1
+
+    document.add_heading('Heading, level 1', level=1)
+    document.add_paragraph('Intense quote', style='IntenseQuote')
+
+
+    # document.add_picture('monty-truth.png', width=Inches(1.25))
+
+    table = document.add_table(rows=len(data), cols=len(list(data[0].keys())))
+    table.style = 'LightShading-Accent1'
+    hdr_cells = table.rows[0].cells
+    # hdr_cells[0].text = 'Qty'
+    # hdr_cells[1].text = 'Id'
+    # hdr_cells[2].text = 'Desc'
+    for i,keys in enumerate(list(data[0].keys())):
+        hdr_cells[i].text = str(keys)
+
+    for dict in data:
+        row_cells = table.add_row().cells
+        for i,values in enumerate(list(dict.values())):
+            row_cells[i].text = str(values)
+    # for item in recordset:
+    #     row_cells = table.add_row().cells
+    #     row_cells[0].text = str(item.qty)
+    #     row_cells[1].text = str(item.id)
+    #     row_cells[2].text = item.desc
+
+    document.add_page_break()
+
+    document.save('demo.docx')
+    os.startfile('demo.docx','print')
+
+#
+# def print_details(*args):
+#     try:
+#         form_name = table_name[lsb_query.curselection()[0]]
+#         print_data(form_name,dbname)
+#     except ValueError:
+#         pass
+
+
+
 root.mainloop()
 db.close()

@@ -55,15 +55,15 @@ class FirstWindow:
         self.District = ttk.Entry(mainframe, textvariable=self.District)
         self.District.grid(row=1, column=2, sticky=(E,), padx=3, pady=4)
 
-        ttk.Label(mainframe, text='teshsil').grid(column=3, row=1, sticky=(W, E), padx=3, pady=4)
+        ttk.Label(mainframe, text='Teshsil').grid(column=3, row=1, sticky=(W, E), padx=3, pady=4)
         self.tehsil = ttk.Entry(mainframe, textvariable=self.tehsil)
         self.tehsil.grid(row=1, column=4, sticky=(E,), padx=3, pady=4)
 
-        ttk.Label(mainframe, text='village').grid(column=1, row=2, sticky=(W, E), padx=3, pady=4)
+        ttk.Label(mainframe, text='Village').grid(column=1, row=2, sticky=(W, E), padx=3, pady=4)
         self.vilage = ttk.Entry(mainframe, textvariable=self.village)
         self.vilage.grid(row=2, column=2, sticky=(E,), padx=3, pady=4)
 
-        ttk.Label(mainframe, text='paragana').grid(column=3, row=2, sticky=(W, E), padx=3, pady=4)
+        ttk.Label(mainframe, text='Paragana').grid(column=3, row=2, sticky=(W, E), padx=3, pady=4)
         self.paragana = ttk.Entry(mainframe, textvariable=self.paragana)
         self.paragana.grid(row=2, column=4, sticky=(E,), padx=3, pady=4)
 
