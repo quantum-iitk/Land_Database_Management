@@ -55,7 +55,7 @@ class FirstWindow:
         self.District = ttk.Entry(mainframe, textvariable=self.District)
         self.District.grid(row=1, column=2, sticky=(E,), padx=3, pady=4)
 
-        ttk.Label(mainframe, text='Teshsil').grid(column=3, row=1, sticky=(W, E), padx=3, pady=4)
+        ttk.Label(mainframe, text='Tehsil').grid(column=3, row=1, sticky=(W, E), padx=3, pady=4)
         self.tehsil = ttk.Entry(mainframe, textvariable=self.tehsil)
         self.tehsil.grid(row=1, column=4, sticky=(E,), padx=3, pady=4)
 

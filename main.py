@@ -48,17 +48,42 @@ def view_table():
         (database1, value))
     global numcol, i
     numcol = int(cursor1.rowcount)
-    for i in range(0, numcol):
-        row1 = [x[0] for x in cursor1.fetchmany()]
 
-        array.insert(i, row1)
-        label1 = Label(col_window, text=row1[0])
-        label1.grid(row=i, column=1, sticky=W)
-        va = StringVar()
-        entry = Entry(col_window, textvariable=StringVar())
-        entry.grid(row=i, column=2, padx=2, pady=2)
-        variables.append(va)
-        entries.append(entry)
+    if(numcol>10):
+        j=0
+        col1=1
+        col2=2
+        for i in range(0,numcol):
+
+            row1 = [x[0] for x in cursor1.fetchmany()]
+            array.insert(i, row1)
+            label1 = Label(col_window, text=row1[0])
+            label1.grid(row=j, column=col1, sticky=W)
+            va = StringVar()
+            entry = Entry(col_window, textvariable=StringVar())
+            entry.grid(row=j, column=col2, padx=17, pady=17)
+            variables.append(va)
+            entries.append(entry)
+            j=j+1
+            if(j==13):
+                j=0
+                col1=col1+2
+                col2=col2+2
+            else:
+                j=j
+
+    else:
+        for i in range(0, numcol):
+            row1 = [x[0] for x in cursor1.fetchmany()]
+
+            array.insert(i, row1)
+            label1 = Label(col_window, text=row1[0])
+            label1.grid(row=i, column=1, sticky=W)
+            va = StringVar()
+            entry = Entry(col_window, textvariable=StringVar())
+            entry.grid(row=i, column=2, padx=2, pady=2)
+            variables.append(va)
+            entries.append(entry)
 
     for k in range(0, numcol):
         vary = (", ".join(array[k]))
@@ -131,14 +156,25 @@ def view_table():
             cursor4.execute(
                 """UPDATE {0} SET {1}={2} WHERE {3} ={4} """.format(table_name, new_var1[l], entries1[l], r, s))
 
-    button_insert = Button(col_window, text="INSERT", command=insert_data)
-    button_insert.grid(row=i + 1, column=1, sticky=SW)
+    if(numcol>10):
+        button_insert = Button(col_window, text="INSERT", command=insert_data)
+        button_insert.grid(row=15, column=3,)
 
-    button_update = Button(col_window, text="UPDATE", command=update_data)
-    button_update.grid(row=i + 1, column=2, sticky=SW)
+        button_update = Button(col_window, text="UPDATE", command=update_data)
+        button_update.grid(row=15, column=4,)
 
-    button_delete = Button(col_window, text="Delete", command=delete_data)
-    button_delete.grid(row=i + 1, column=3, sticky=SW)
+        button_delete = Button(col_window, text="Delete", command=delete_data)
+        button_delete.grid(row=15, column=5)
+
+    else:
+        button_insert = Button(col_window, text="INSERT", command=insert_data)
+        button_insert.grid(row=i + 1, column=1, sticky=SW)
+
+        button_update = Button(col_window, text="UPDATE", command=update_data)
+        button_update.grid(row=i + 1, column=2, sticky=SW)
+
+        button_delete = Button(col_window, text="Delete", command=delete_data)
+        button_delete.grid(row=i + 1, column=3, sticky=SW)
 
 
 label = Label(root, text="The tables in the database are as follow:")
