@@ -173,7 +173,6 @@ def view_table():
         count = 0
         for data in data_container:
             print(data)
-            # entry.insert(count, data)
             e = entries[count]
             e.delete(0, END)
             e.insert(count, data)
@@ -190,7 +189,7 @@ def view_table():
         button_delete.grid(row=15, column=5)
 
 
-        button_search = Button(col_window, text="Search", command=search_data)
+        button_search = Button(col_window, text="Fetch", command=search_data)
         button_search.grid(row=15, column=6)
 
     else:
