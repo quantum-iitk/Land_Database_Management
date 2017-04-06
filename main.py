@@ -211,15 +211,15 @@ label.grid(row=0, column=0, sticky=N)
 label.configure(background='green')
 
 
-label_print = Label(root, text="Select the listed tables to print:",background='green')
-label_print.grid(row=0, column=3, sticky=E,)
+# label_print = Label(root, text="Select the listed tables to print:",background='green')
+# label_print.grid(row=0, column=3, sticky=E,)
 
 listbox1 = Listbox(root,background='yellow')
 listbox1.grid(sticky=NSEW,)
 
 
 click = Button(root, text="Click to view tables", command=view_table)
-click.grid(row=2, column=0, sticky=E, padx=2, pady=2)
+click.grid(row=2, column=0, sticky=W, padx=2, pady=2)
 
 my_menu = Menu(root)
 menu_bar = Menu(root)
@@ -247,8 +247,6 @@ root.configure(background='green')
 cursor = db.cursor()
 cursor.execute('SELECT table_name FROM information_schema.tables where table_schema=\'' + db_name + '\'')
 num_tables = int(cursor.rowcount)
-lsb_query=Listbox(root,background='yellow')
-lsb_query.grid(column=3,row=1,sticky=NSEW,)
 
 db.commit()
 
@@ -256,17 +254,17 @@ db.commit()
 for i in range(0, num_tables):
     row = cursor.fetchone()
     listbox1.insert(END, row[0])
-    lsb_query.insert(END,row[0])
+    # lsb_query.insert(END,row[0])
 
 def print_details(*args):
     try:
-        value = str((lsb_query.get(lsb_query.curselection())))
+        value = str((listbox1.get(listbox1.curselection())))
         print_data(value)
     except ValueError:
         pass
 
 printer = Button(root, text="Print", command=print_details)
-printer.grid(row=2, column=3, sticky=E, padx=2, pady=2)
+printer.grid(row=2, column=0, sticky=E, padx=2, pady=2)
 
 
 def print_data(value):
@@ -287,12 +285,12 @@ def print_data(value):
     document = Document()
 
     section = document.sections[0]
-    section.orientation= WD_ORIENTATION.LANDSCAPE
+    section.orientation = WD_ORIENTATION.LANDSCAPE
     print(section.orientation)
 
     section.page_width = Inches(18.03)
     section.page_height = Inches(12.76)
-    print(section.page_height,section.page_width)
+    print(section.page_height, section.page_width)
     # /section.orientation = WD_ORIENT.LANDSCAPE
     h = document.add_heading(value.capitalize(), 0)
     h.alignment = 1
@@ -305,7 +303,7 @@ def print_data(value):
     p.alignment =1
 
     document.add_heading('Heading, level 1', level=1)
-    document.add_paragraph('Intense quote', style='IntenseQuote')
+    document.add_paragraph('Intense quote', style='Intense Quote')
 
 
     # document.add_picture('monty-truth.png', width=Inches(1.25))
