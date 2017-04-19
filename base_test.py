@@ -14,15 +14,17 @@ class FirstWindow:
         self.db_name = "land_records_" + self.District.get().strip() + "_" + self.tehsil.get().strip() + "_" + self.village.get().strip() + "_" + self.paragana.get().strip()
         try:
             print(self.db_name)
-            connection = psql.connect(host='localhost', user='root', password='', db=self.db_name, charset='utf8mb4',
-                                      cursorclass=psql.cursors.DictCursor)
+            # connection = psql.connect(host='localhost', user='root', password='', db=self.db_name, charset='utf8mb4',
+            #                           cursorclass=psql.cursors.DictCursor)
+            connection = self.connection
             print("Databse already exists and connected")
             self.root.destroy()
             # main1(self.db_name)
         except:
-            connection = psql.connect(host='localhost', user='root', password='', charset='utf8mb4',
-                                      cursorclass=psql.cursors.DictCursor
-                                      )
+            # connection = psql.connect(host='localhost', user='root', password='', charset='utf8mb4',
+            #                           cursorclass=psql.cursors.DictCursor
+            #                           )
+            connection = self.connection
             cursor = connection.cursor()
             cursor.execute("CREATE DATABASE `%s`" % self.db_name)
             print("New database created")
@@ -35,9 +37,10 @@ class FirstWindow:
             self.root.destroy()
             # main1(self.db_name)
 
-    def __init__(self):
+    def __init__(self, connection):
         self.root = Tk()
         self.root.title("Database Connection")
+        self.connection = connection
 
         gui_style = ttk.Style()
         gui_style.configure('My.TButton', foreground='#334353')
